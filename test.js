@@ -34,4 +34,4 @@ $.ajax = function(a) {
 }
 const jquery = require('jquery')
 const common = require('./common');
-common.doLogin('admin','a12345678', (a)=>{console.log('success',a)}, (e)=>{console.log('failed',e)});
+common.doLogin('admin','a12345678', (a,b)=>{console.log('success',a,b)}, (e)=>{console.log('failed',e)});
