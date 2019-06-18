@@ -5,6 +5,7 @@ global.document = document;
 global.window = window;
 global.$ = require('jquery');
 const ajax = require('najax');
+global.SHA256 = require('sha256');
 
 $.cookie = function (t, a, i) {
     if (arguments.length > 1 && (null === a || "object" != typeof a)) {
