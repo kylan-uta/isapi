@@ -27,6 +27,7 @@ $.cookie = function (t, a, i) {
     return (r = RegExp("(?:^|; )" + encodeURIComponent(t) + "=([^;]*)").exec(document.cookie)) ? s(r[1]) : null
 };
 global.SHA256 = require('sha256');
+global.MD5 = require('md5');
 
 
 const common = require('./common');
