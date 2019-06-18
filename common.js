@@ -245,7 +245,9 @@ define(function (require, exports, module) {
                 error: function () {
                     u.setAuthMode("digest")
                 }
-            }), WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, m, {
+            }),
+            console.log("登陆阶段1")
+            , WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, m, {
                 session: u.m_bSession,
                 data: l,
                 success: function (a, l) {
@@ -256,7 +258,7 @@ define(function (require, exports, module) {
                     "function" == typeof a && a.apply(r, [e, t].concat(c || []))
                 }
             })
-            console.log('真的登陆成功')
+            console.log('异步请求已发送')
         },
         exportGuid: function (e, i, a) {
             var r = this,
