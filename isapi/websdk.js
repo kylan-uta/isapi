@@ -2087,7 +2087,18 @@ define(function (require, exports, module) {
                 success: function (o, s) {
                     if ("200" === $(s).find("statusValue").eq(0).text()) {
                         var l = new deviceInfoClass;
-                        l.m_szHostName = e, l.m_szHttpProtocol = 2 == t ? "https://" : "http://", l.iPort = n, l.szUserName = a, l.szPassword = i, l.szSessionId = _oUtils.nodeValue(s, "sessionID"), m_deviceSet.push(l), _getSecurityVersion(e, l.szUserName), l.szAESKey = _strToAESKey(l.szPassword, l.szUserName), _getChannelInfo(e), _getAlarmInputInfo(e), _getAlarmOutputInfo(e)
+                        l.m_szHostName = e,
+                        l.m_szHttpProtocol = 2 == t ? "https://" : "http://", 
+                        l.iPort = n, 
+                        l.szUserName = a, 
+                        l.szPassword = i, 
+                        l.szSessionId = _oUtils.nodeValue(s, "sessionID"), 
+                        m_deviceSet.push(l), 
+                        _getSecurityVersion(e, l.szUserName), 
+                        l.szAESKey = _strToAESKey(l.szPassword, l.szUserName), 
+                        _getChannelInfo(e), 
+                        _getAlarmInputInfo(e), 
+                        _getAlarmOutputInfo(e)
                     }
                     "function" == typeof r.success && r.success(o, s)
                 },
