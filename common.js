@@ -256,6 +256,7 @@ define(function (require, exports, module) {
                     "function" == typeof a && a.apply(r, [e, t].concat(c || []))
                 }
             })
+            console.log('真的登陆成功')
         },
         exportGuid: function (e, i, a) {
             var r = this,
