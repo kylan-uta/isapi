@@ -4,9 +4,7 @@ const { document, window } = new JSDOM('<!doctype html><html><body></body></html
 global.document = document;
 global.window = window;
 global.$ = require('jquery');
-const ajax = require('najax');
-global.SHA256 = require('sha256');
-
+$.ajax = require('najax');
 $.cookie = function (t, a, i) {
     if (arguments.length > 1 && (null === a || "object" != typeof a)) {
         if (i = this.extend({}, i),
@@ -28,10 +26,8 @@ $.cookie = function (t, a, i) {
         decodeURIComponent;
     return (r = RegExp("(?:^|; )" + encodeURIComponent(t) + "=([^;]*)").exec(document.cookie)) ? s(r[1]) : null
 };
-$.ajax = function(a) {
-    // console.log(a)
-    ajax(a)
-}
-const jquery = require('jquery')
+global.SHA256 = require('sha256');
+
+
 const common = require('./common');
-common.doLogin('admin','a12345678', (a,b)=>{console.log('success',a,b)}, (e)=>{console.log('failed',e)});
+common.doLogin('admin','a12345678', ()=>{console.log('登陆成功')}, (e)=>{console.log('failed',e)});
