@@ -2112,10 +2112,10 @@ define(function (require, exports, module) {
             if (-1 != r) return _PrintString("设备已经登录过"), m_deviceSet[r].m_szHttpProtocol = 2 == t ? "https://" : "http://", m_deviceSet[r].iPort = n, m_deviceSet[r].szUserName = a, m_deviceSet[r].szPassword = i, m_deviceSet[r].szSessionId = o.sessionId, m_deviceSet[r].szAESKey = _strToAESKey(m_deviceSet[r].szPassword, m_deviceSet[r].szUserName), void 0;
             var s = new deviceInfoClass;
             s.m_szHostName = e, s.m_szHttpProtocol = 2 == t ? "https://" : "http://", s.iPort = n, s.szUserName = a, s.szPassword = i, s.szSessionId = o.sessionId, m_deviceSet.push(s), _getSecurityVersion(e, s.szUserName), s.szAESKey = _strToAESKey(s.szPassword, s.szUserName), _getChannelInfo(e), _getAlarmInputInfo(e), _getAlarmOutputInfo(e)
-        }, this.WSDK_GetDeviceConfig = function (e, t, n, a) {
-            if (_checkCommond(t, a)) {
+        }, this.WSDK_GetDeviceConfig = function (e, t, n, ajaxOpt) {
+            if (_checkCommond(t, ajaxOpt)) {
                 var i = "GET";
-                i = a.hasOwnProperty("type") ? a.type : _getHttpMethod("get", t), _submit(e, i, _getCmd(t), n, a)
+                i = ajaxOpt.hasOwnProperty("type") ? ajaxOpt.type : _getHttpMethod("get", t), _submit(e, i, _getCmd(t), n, ajaxOpt)
             }
         }, this.WSDK_SetDeviceConfig = function (e, t, n, a) {
             if (_checkCommond(t, a)) {
@@ -2368,10 +2368,10 @@ define(function (require, exports, module) {
                     var s = m_deviceSet[o],
                         l = "";
                     "string" != typeof n.url ? "analog" in n ? l = parseInt(a[PARAM_OPTION_CHANNEL], 10) <= s.iAnalogChannelNum ? n.analog.url : n.digital.url : "analogIOAI" in n ? l = parseInt(a[PARAM_OPTION_IO], 10) <= s.iAnalogAlarmInputNum ? n.analogIOAI.url : n.digitalIOAI.url : "analogIO" in n && (l = parseInt(a[PARAM_OPTION_IO], 10) <= s.iAnalogAlarmOutputNum ? n.analogIO.url : n.digitalIO.url) : l = n.url;
-                    var c = _FormatString(l, s.m_szHttpProtocol, s.m_szHostName, s.iPort);
+                    var url = _FormatString(l, s.m_szHttpProtocol, s.m_szHostName, s.iPort);
                     if (n.req !== void 0)
-                        for (var r = 0; n.req.length > r; r++) c = _FormatString(c, a[n.req[r]]);
-                    var u = {
+                        for (var r = 0; n.req.length > r; r++) url = _FormatString(url, a[n.req[r]]);
+                    var options = {
                         type: t,
                         username: s.szUserName,
                         password: s.szPassword,
@@ -2379,13 +2379,13 @@ define(function (require, exports, module) {
                         cgi: n,
                         aesKey: s.szAESKey
                     };
-                    $.extend(u, i);
+                    $.extend(options, i);
                     var d = self.iSecurityVersion;
                     if (d > 0 && n["security" + d]) {
                         var m = _getAesIV();
-                        c += "?security=" + d + "&iv=" + m, "DELETE" === t && -1 !== c.indexOf("users/") && self.oSecurityCap.bSptUserCheck && (c += "&loginPassword=" + _oUtils.encodeAES(_oBase64.encode(_oUtils.encodeString(u.loginPassword)), self.szAESKey, m))
+                        url += "?security=" + d + "&iv=" + m, "DELETE" === t && -1 !== url.indexOf("users/") && self.oSecurityCap.bSptUserCheck && (url += "&loginPassword=" + _oUtils.encodeAES(_oBase64.encode(_oUtils.encodeString(options.loginPassword)), self.szAESKey, m))
                     }
-                    _submitRequest(c, u)
+                    _submitRequest(url, options)
                 }
             },
             _submitRequest = function (e, t) {
