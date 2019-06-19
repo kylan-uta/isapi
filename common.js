@@ -262,23 +262,25 @@ define(function (require, exports, module) {
                     }, c);
                 l = "<SessionLogin>", l += "<userName>" + o.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
                 console.log("登陆阶段1 真的完成")
+
+                WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, m, {
+                    session: u.m_bSession,
+                    data: l,
+                    success: function (a, l) {
+                        var m = username + ":" + password;
+                        u.m_bSession && (u.m_szSessionId = o.nodeValue(l, "sessionID"), i.setItem("sessionId", u.m_szSessionId), m = o.encodeAES(t.encode(m), MD5(u.m_szSessionId)), u.sessionHeartbeat()), i.setItem("userInfo", t.encode(m)), "function" == typeof s && s.apply(r, [a, l].concat(c || []))
+                        console.log('登陆阶段2 真的完成')
+                    },
+                    error: function (e, t) {
+                        "function" == typeof a && a.apply(r, [e, t].concat(c || []))
+                    }
+                })
+                console.log('登陆阶段2 异步请求已发送')
             }, ()=>{
                 u.setAuthMode("digest")
             })
+            // .then()
             console.log("登陆阶段1 through")
-            , WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, m, {
-                session: u.m_bSession,
-                data: l,
-                success: function (a, l) {
-                    var m = username + ":" + password;
-                    u.m_bSession && (u.m_szSessionId = o.nodeValue(l, "sessionID"), i.setItem("sessionId", u.m_szSessionId), m = o.encodeAES(t.encode(m), MD5(u.m_szSessionId)), u.sessionHeartbeat()), i.setItem("userInfo", t.encode(m)), "function" == typeof s && s.apply(r, [a, l].concat(c || []))
-                    console.log('登陆阶段2 真的完成')
-                },
-                error: function (e, t) {
-                    "function" == typeof a && a.apply(r, [e, t].concat(c || []))
-                }
-            })
-            console.log('登陆阶段2 异步请求已发送')
         },
         exportGuid: function (e, i, a) {
             var r = this,
