@@ -248,6 +248,7 @@ define(function (require, exports, module) {
                 // }
             })
             .then((t,i)=>{
+                console.log(i)
                 u.setAuthMode("session");
                 var s = Utils.nodeValue(i, "sessionID"),
                     a = Utils.nodeValue(i, "challenge"),
