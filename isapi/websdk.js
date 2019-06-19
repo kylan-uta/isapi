@@ -2507,15 +2507,15 @@ define(function (require, exports, module) {
                         if (a > 0 && i) {
                             var o = n,
                                 r = this.options.type,
-                                s = this.options.aesKey,
+                                aesKey = this.options.aesKey,
                                 l = i["security" + a];
                             if (l && ("GET" === r || "POST" === r))
-                                for (var c, u, d = 0, m = l.length; m > d; d++) {
+                                for (var c, encryptedValue, d = 0, m = l.length; m > d; d++) {
                                     c = $(o).find("" + l[d]);
                                     for (var p = 0, g = c.length; g > p; p++)
-                                        if (u = $(c[p]).text(), u.length) {
-                                            var h = t.substr(4 + t.indexOf("&iv="), 32),
-                                                f = _oBase64.decode(_oUtils.decodeAES(u, s, h));
+                                        if (encryptedValue = $(c[p]).text(), encryptedValue.length) {
+                                            var iv = t.substr(4 + t.indexOf("&iv="), 32),
+                                                f = _oBase64.decode(_oUtils.decodeAES(encryptedValue, aesKey, iv));
                                             $(c[p]).text(_oUtils.decodeString(f))
                                         }
                                 }
