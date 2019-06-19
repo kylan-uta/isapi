@@ -3,7 +3,6 @@ require('./isapi/websdk');
 const { JSDOM } = require('jsdom');
 const { window } = new JSDOM('<!doctype html><html><body></body></html>');
 global.document = window.document;
-console.log(document)
 global.window = window;
 global.$ = require('jquery');
 $.ajax = require('najax');
