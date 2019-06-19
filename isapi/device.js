@@ -48,9 +48,9 @@ define(function (require, exports, module) {
             DIGITAL: "DigitalAlarmInputInfo"
         }, this.getSHttpCapa(), this.getDeviceInfo(), this.getRTSPPort(), this.getDeviceCapa(), this.getTriggersCap(), this.getCustomCap()
     }
-    var t = require("common"),
-        n = require("utils"),
-        a = require("dialog");
+    var t = require("../common"),
+        n = require("../lib/utils"),
+        // a = require("dialog");
     e.prototype = {
         getSHttpCapa: function () {
             var e = this;
