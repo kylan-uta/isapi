@@ -2099,12 +2099,14 @@ define(function (require, exports, module) {
                         .done(()=>{
                             l.szAESKey = _strToAESKey(l.szPassword, l.szUserName)
                             console.log(m_deviceSet)
+                            "function" == typeof r.success && r.success(o, s)
                         })
                         // _getChannelInfo(e), 
                         // _getAlarmInputInfo(e), 
                         // _getAlarmOutputInfo(e)
+                    } else {
+                        "function" == typeof r.error && r.error(o, s)
                     }
-                    "function" == typeof r.success && r.success(o, s)
                 },
                 error: function (e, t) {
                     "function" == typeof r.error && r.error(e, t)
