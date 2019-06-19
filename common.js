@@ -227,28 +227,8 @@ define(function (require, exports, module) {
                 },
                 queryObject: !0,
                 processData: !0,
-                // success: function (t, i) {
-                //     u.setAuthMode("session");
-                //     var s = o.nodeValue(i, "sessionID"),
-                //         a = o.nodeValue(i, "challenge"),
-                //         r = o.nodeValue(i, "iterations", "i"),
-                //         c = o.nodeValue(i, "isIrreversible", "b"),
-                //         m = o.nodeValue(i, "salt"),
-                //         d = o.encodePwd(password, {
-                //             challenge: a,
-                //             userName: username,
-                //             salt: m,
-                //             iIterate: r
-                //         }, c);
-                //     l = "<SessionLogin>", l += "<userName>" + o.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
-                //     console.log("登陆阶段1 真的完成")
-                // },
-                // error: function () {
-                //     u.setAuthMode("digest")
-                // }
             })
             .then((t,i)=>{
-                console.log(i)
                 u.setAuthMode("session");
                 var s = Utils.nodeValue(i, "sessionID"),
                     a = Utils.nodeValue(i, "challenge"),
@@ -266,23 +246,22 @@ define(function (require, exports, module) {
                 l += "<password>" + d + "</password>", 
                 l += "<sessionID>" + s + "</sessionID>", 
                 l += "</SessionLogin>"
-                console.log("登陆阶段1 真的完成")
                 return $.Deferred().resolve(l)
             }, ()=>{
                 u.setAuthMode("digest")
             })
             .then((l)=>{
-                console.log(l)
                 WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, curTime, {
                     session: u.m_bSession,
                     data: l,
                     success: function (a, l) {
-                        var m = username + ":" + password;
-                        u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
-                        WebSession.setItem("sessionId", u.m_szSessionId), 
-                        m = Utils.encodeAES(t.encode(m), MD5(u.m_szSessionId)), 
-                        u.sessionHeartbeat()), 
-                        WebSession.setItem("userInfo", t.encode(m)), 
+                        console.log(a,l)
+                        // var m = username + ":" + password;
+                        // u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
+                        // WebSession.setItem("sessionId", u.m_szSessionId), 
+                        // m = Utils.encodeAES(t.encode(m), MD5(u.m_szSessionId)), 
+                        // u.sessionHeartbeat()), 
+                        // WebSession.setItem("userInfo", t.encode(m)), 
                         "function" == typeof finishCB && finishCB.apply(r, [a, l].concat(c || []))
                     },
                     error: function (e, t) {
@@ -290,9 +269,7 @@ define(function (require, exports, module) {
                         "function" == typeof errorCB && errorCB.apply(r, [e, t].concat(c || []))
                     }
                 })
-                console.log('登陆阶段2 异步请求已发送')
             })
-            console.log("登陆阶段1 through")
         },
         exportGuid: function (e, i, a) {
             var r = this,
