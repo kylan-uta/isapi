@@ -2617,7 +2617,7 @@ define(function (require, exports, module) {
                     n.processCompleteCB(e)
                 }
             })
-            .then((t, a, i)=>{n.processSuccessCBDfd(i, e)}, (e, t)=>{n.processErrorCBDfd(e, t)})
+            .then((t, a, i)=>{return n.processSuccessCBDfd(i, e)}, (e, t)=>{return n.processErrorCBDfd(e, t)})
             // .done("function" == typeof this.options.success ? this.options.success : null)
             // .fail("function" == typeof this.options.error ? this.options.error : null)
             // .always(e=>{n.processCompleteCB(e)})
