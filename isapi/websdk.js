@@ -2097,9 +2097,10 @@ define(function (require, exports, module) {
                         m_deviceSet.push(l), 
                         _getSecurityVersion(e, l.szUserName), 
                         l.szAESKey = _strToAESKey(l.szPassword, l.szUserName), 
-                        _getChannelInfo(e), 
-                        _getAlarmInputInfo(e), 
-                        _getAlarmOutputInfo(e)
+                        console.log(m_deviceSet)
+                        // _getChannelInfo(e), 
+                        // _getAlarmInputInfo(e), 
+                        // _getAlarmOutputInfo(e)
                     }
                     "function" == typeof r.success && r.success(o, s)
                 },
