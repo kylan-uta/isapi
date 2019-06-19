@@ -2594,6 +2594,7 @@ define(function (require, exports, module) {
             }
             var m = "", 
             p = "";
+            console.log("sessionId: "+this.options.sessionId)
             this.options.sessionId ? $.cookie("WebSession", this.options.sessionId) : ($.cookie("WebSession", null), m = this.options.username, p = this.options.password);
             return $.ajax({
                 type: this.options.type,
