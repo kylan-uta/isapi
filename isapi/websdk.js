@@ -2094,10 +2094,12 @@ define(function (require, exports, module) {
                         l.szUserName = a, 
                         l.szPassword = i, 
                         l.szSessionId = _oUtils.nodeValue(s, "sessionID"), 
-                        l.szAESKey = _strToAESKey(l.szPassword, l.szUserName), 
                         m_deviceSet.push(l), 
-                        _getSecurityVersion(e, l.szUserName), 
-                        console.log(m_deviceSet)
+                        _getSecurityVersion(e, l.szUserName)
+                        .done(()=>{
+                            l.szAESKey = _strToAESKey(l.szPassword, l.szUserName)
+                            console.log(m_deviceSet)
+                        })
                         // _getChannelInfo(e), 
                         // _getAlarmInputInfo(e), 
                         // _getAlarmOutputInfo(e)
@@ -2386,7 +2388,7 @@ define(function (require, exports, module) {
                         var m = _getAesIV();
                         url += "?security=" + d + "&iv=" + m, "DELETE" === t && -1 !== url.indexOf("users/") && self.oSecurityCap.bSptUserCheck && (url += "&loginPassword=" + _oUtils.encodeAES(_oBase64.encode(_oUtils.encodeString(options.loginPassword)), self.szAESKey, m))
                     }
-                    _submitRequest(url, options)
+                    return _submitRequest(url, options)
                 }
             },
             _submitRequest = function (e, t) {
@@ -2394,37 +2396,39 @@ define(function (require, exports, module) {
                 return n.submitRequest(e, t)
             },
             _getSecurityVersion = function (e, t) {
-                _submit(e, "GET", self.CGI.securityCap, null, {
+                return _submit(e, "GET", self.CGI.securityCap, null, {
                     async: !1,
                     data: {
                         username: t
                     },
                     queryObject: !0,
                     processData: !0,
-                    success: function (e, t) {
-                        self.iKeyIterateNum = _oUtils.nodeValue(t, "keyIterateNum", "i");
-                        var n = _oUtils.nodeAttr(t, "securityVersion", "opt");
-                        if ("" != n) {
-                            var a, i, o = n.split(",");
-                            $.each(o, function () {
-                                return a = parseInt("" + this, 10), a > self.iSecurityVersion ? !1 : (i = a, void 0)
-                            }), i && (self.iSecurityVersion = i)
-                        } else self.iSecurityVersion = 0;
-                        self.iSecurityVersion && (self.oSecurityCap.bSptUserCheck = _oUtils.nodeValue(t, "isSupportUserCheck", "b")), self.oSecurityCap.bSptGuidExport = _oUtils.nodeValue(t, "isSupportGUIDFileDataExport", "b"), self.oSecurityCap.bSptQACfg = _oUtils.nodeValue(t, "isSupportSecurityQuestionConfig", "b"), self.oSecurityCap.bSptOnlineUser = _oUtils.nodeValue(t, "isSupportOnlineUser", "b") || _oUtils.nodeValue(t, "isSupportGetOnlineUserListSC", "b"), self.oSecurityCap.oIrreversibleEncrypt = {
-                            bSupport: "true" === $(t).find("isIrreversible").text(),
-                            salt: $(t).find("salt").text()
-                        }, self.oSecurityCap.oDeviceParamFileEncrypt = {
-                            bSupportImport: _oUtils.nodeValue(t, "isSupportConfigFileImport", "b"),
-                            bSupportExport: _oUtils.nodeValue(t, "isSupportConfigFileExport", "b"),
-                            iMaxEncrypt: _oUtils.nodeAttr(t, "cfgFileSecretKeyLenLimit", "max", "i") || 16,
-                            iMinEncrypt: _oUtils.nodeAttr(t, "cfgFileSecretKeyLenLimit", "min", "i") || 1
-                        }, self.oSecurityCap.oWebCap = {
-                            aOptions: $(t).find("WebCertificateCap").length > 0 ? _oUtils.nodeAttr(t, "WebCertificateCap CertificateType", "opt").split(",") : ["basic", "digest"]
-                        }, self.oSecurityCap.bSupportONVIFUser = _oUtils.nodeValue(t, "isSupportONVIFUserManagement", "b")
-                    },
-                    error: function () {
-                        self.iSecurityVersion = 0
-                    }
+                })
+                .then((e, t) => {
+                    self.iKeyIterateNum = _oUtils.nodeValue(t, "keyIterateNum", "i");
+                    var n = _oUtils.nodeAttr(t, "securityVersion", "opt");
+                    if ("" != n) {
+                        var a, i, o = n.split(",");
+                        $.each(o, function () {
+                            return a = parseInt("" + this, 10), a > self.iSecurityVersion ? !1 : (i = a, void 0)
+                        }), i && (self.iSecurityVersion = i)
+                    } else self.iSecurityVersion = 0;
+                    self.iSecurityVersion && (self.oSecurityCap.bSptUserCheck = _oUtils.nodeValue(t, "isSupportUserCheck", "b")), self.oSecurityCap.bSptGuidExport = _oUtils.nodeValue(t, "isSupportGUIDFileDataExport", "b"), self.oSecurityCap.bSptQACfg = _oUtils.nodeValue(t, "isSupportSecurityQuestionConfig", "b"), self.oSecurityCap.bSptOnlineUser = _oUtils.nodeValue(t, "isSupportOnlineUser", "b") || _oUtils.nodeValue(t, "isSupportGetOnlineUserListSC", "b"), self.oSecurityCap.oIrreversibleEncrypt = {
+                        bSupport: "true" === $(t).find("isIrreversible").text(),
+                        salt: $(t).find("salt").text()
+                    }, self.oSecurityCap.oDeviceParamFileEncrypt = {
+                        bSupportImport: _oUtils.nodeValue(t, "isSupportConfigFileImport", "b"),
+                        bSupportExport: _oUtils.nodeValue(t, "isSupportConfigFileExport", "b"),
+                        iMaxEncrypt: _oUtils.nodeAttr(t, "cfgFileSecretKeyLenLimit", "max", "i") || 16,
+                        iMinEncrypt: _oUtils.nodeAttr(t, "cfgFileSecretKeyLenLimit", "min", "i") || 1
+                    }, self.oSecurityCap.oWebCap = {
+                        aOptions: $(t).find("WebCertificateCap").length > 0 ? _oUtils.nodeAttr(t, "WebCertificateCap CertificateType", "opt").split(",") : ["basic", "digest"]
+                    }, self.oSecurityCap.bSupportONVIFUser = _oUtils.nodeValue(t, "isSupportONVIFUserManagement", "b")
+                    return $.Deferred().resolve()
+                },
+                () => {
+                    self.iSecurityVersion = 0
+                    return $.Deferred().reject()
                 })
             },
             _getChannelInfo = function (e) {
