@@ -49,7 +49,7 @@ define(function (require, exports, module) {
         }, this.getSHttpCapa(), this.getDeviceInfo(), this.getRTSPPort(), this.getDeviceCapa(), this.getTriggersCap(), this.getCustomCap()
     }
     var t = require("../common"),
-        n = require("../lib/utils"),
+        n = require("../lib/utils")
         // a = require("dialog");
     e.prototype = {
         getSHttpCapa: function () {
