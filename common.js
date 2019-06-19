@@ -14,7 +14,7 @@ define(function (require, exports, module) {
         this.m_iHttpProtocal = "http://" == this.m_szHttpProtocol ? 1 : 2, 
         "" != location.port ? this.m_iHttpPort = location.port : "https://" == this.m_szHttpProtocol && (this.m_iHttpPort = 443), 
         this.m_szHostName.indexOf("[") > -1 && (this.m_szHostNameOriginal = this.m_szHostName.substring(1, this.m_szHostName.length - 1)), 
-        o.isIPv6Address(this.m_szHostNameOriginal) && (this.m_szHostName = "[" + this.m_szHostNameOriginal + "]");
+        Utils.isIPv6Address(this.m_szHostNameOriginal) && (this.m_szHostName = "[" + this.m_szHostNameOriginal + "]");
         var e = location.pathname.match(/\/doc\/page\/([^.]+).asp/);
         this.m_szPage = "", 
         null != e && (this.m_szPage = e[1]), 
@@ -25,9 +25,9 @@ define(function (require, exports, module) {
     }
     /*require("layout"), require("cookie"),*/ require("./lib/json2"), /*require("angular"),*/ require("./isapi/websdk"), require("cryptico");
     var t = require("./lib/base64"),
-        i = require("./lib/webSession"),
+        WebSession = require("./lib/webSession"),
         // n = require("translator"),
-        o = require("./lib/utils");
+        Utils = require("./lib/utils");
         // s = require("dialog");
     e.prototype = {
         init: function () {
@@ -44,16 +44,16 @@ define(function (require, exports, module) {
                         e.goLogin()
                     },
                     403: function (t) {
-                        "notActivated" == o.nodeValue(t, "subStatusCode") && e.goLogin()
+                        "notActivated" == Utils.nodeValue(t, "subStatusCode") && e.goLogin()
                     }
                 }
             });
             var n = ["login", "pwdReset"];
             if (-1 === $.inArray(e.m_szPage, n)) {
-                if (e.m_szSessionId = i.getItem("sessionId"), e.m_szSessionId && "" != e.m_szSessionId && e.setAuthMode("session"), e.m_szNamePwd = i.getItem("userInfo"), null === e.m_szNamePwd) return e.goLogin(), void 0;
+                if (e.m_szSessionId = WebSession.getItem("sessionId"), e.m_szSessionId && "" != e.m_szSessionId && e.setAuthMode("session"), e.m_szNamePwd = WebSession.getItem("userInfo"), null === e.m_szNamePwd) return e.goLogin(), void 0;
                 var s = t.decode(e.m_szNamePwd);
-                e.m_bSession && (s = o.decodeAES(s, MD5(e.m_szSessionId)), e.m_szNamePwd = s, s = t.decode(s));
-                var a = o.parseNamePwd(s);
+                e.m_bSession && (s = Utils.decodeAES(s, MD5(e.m_szSessionId)), e.m_szNamePwd = s, s = t.decode(s));
+                var a = Utils.parseNamePwd(s);
                 e.m_oLoginUser.szName = a.szName, WebSDK.WSDK_SetLoginInfo(e.m_szHostName, e.m_iHttpProtocal, e.m_iHttpPort, a.szName, a.szPass, {
                     sessionId: e.m_szSessionId
                 }), e.updatePluginAuth(a.szName, a.szPass), e.sessionHeartbeat()
@@ -63,7 +63,7 @@ define(function (require, exports, module) {
         updateWebAuth: function (e, n) {
             var s = this,
                 a = t.encode(e + ":" + n);
-            s.m_szNamePwd = a, s.m_bSession && (0 === s.m_szSessionId.length && (s.m_szSessionId = i.getItem("sessionId")), a = t.encode(o.encodeAES(a, MD5(s.m_szSessionId)))), i.setItem("userInfo", a), WebSDK.WSDK_SetLoginInfo(s.m_szHostName, s.m_iHttpProtocal, s.m_iHttpPort, e, n, {
+            s.m_szNamePwd = a, s.m_bSession && (0 === s.m_szSessionId.length && (s.m_szSessionId = WebSession.getItem("sessionId")), a = t.encode(Utils.encodeAES(a, MD5(s.m_szSessionId)))), WebSession.setItem("userInfo", a), WebSDK.WSDK_SetLoginInfo(s.m_szHostName, s.m_iHttpProtocal, s.m_iHttpPort, e, n, {
                 sessionId: s.m_szSessionId
             })
         },
@@ -87,8 +87,8 @@ define(function (require, exports, module) {
                 async: !1,
                 success: function (t, i) {
                     $(i).find("User").each(function () {
-                        if (e.m_oLoginUser.szName === o.nodeValue(this, "userName")) {
-                            var t = o.nodeValue(this, "userLevel");
+                        if (e.m_oLoginUser.szName === Utils.nodeValue(this, "userName")) {
+                            var t = Utils.nodeValue(this, "userLevel");
                             "Administrator" === t ? e.m_oLoginUser.szType = "admin" : "Operator" === t ? e.m_oLoginUser.szType = "operator" : "Viewer" === t && (e.m_oLoginUser.szType = "viewer")
                         }
                     })
@@ -126,7 +126,7 @@ define(function (require, exports, module) {
             })
         },
         overrideAngular: function () {
-            angular.oldModule = o.cloneFunc(angular.module), angular.module = function () {
+            angular.oldModule = Utils.cloneFunc(angular.module), angular.module = function () {
                 var e = angular.oldModule.apply(angular.oldModule, arguments);
                 return e.config(function ($provide) {
                     $provide.decorator("ngBindDirective", ["$delegate", function (e) {
@@ -184,7 +184,7 @@ define(function (require, exports, module) {
                             e.m_iSessionFailed = 0
                         },
                         error: function (t, i) {
-                            e.m_iSessionFailed++, t > 300 && "notActivated" === o.nodeValue(i, "subStatusCode") && (e.m_iSessionInterval > 0 && clearInterval(e.m_iSessionInterval), e.goLogin())
+                            e.m_iSessionFailed++, t > 300 && "notActivated" === Utils.nodeValue(i, "subStatusCode") && (e.m_iSessionInterval > 0 && clearInterval(e.m_iSessionInterval), e.goLogin())
                         },
                         complete: function () {
                             e.m_iSessionFailed >= 5 && (clearInterval(e.m_iSessionInterval), e.isDeviceAccessible() ? e.goLogin() : WebSDK.m_bReConnecting ? e.goLogin() : e.reconnect())
@@ -212,11 +212,11 @@ define(function (require, exports, module) {
                 a.length > 0 && a[1].indexOf("trident") > -1 && (a[1] = "msie"), a[1] && ($.browser[a[1]] = !0, $.browser.version = a[2] || ""), $.browser.webkit && ($.browser.safari = !0)
             }())
         },
-        doLogin: function (username, password, s, a, r, c) {
+        doLogin: function (username, password, finishCB, errorCB, r, c) {
             var u = this;
-            i.removeItem("sessionId");
+            WebSession.removeItem("sessionId");
             var l = "",
-                m = (new Date).getTime();
+                curTime = (new Date).getTime();
             WebSDK.WSDK_Request(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, {
                 cmd: "sessionCap",
                 async: !1,
@@ -249,37 +249,42 @@ define(function (require, exports, module) {
             })
             .then((t,i)=>{
                 u.setAuthMode("session");
-                var s = o.nodeValue(i, "sessionID"),
-                    a = o.nodeValue(i, "challenge"),
-                    r = o.nodeValue(i, "iterations", "i"),
-                    c = o.nodeValue(i, "isIrreversible", "b"),
-                    m = o.nodeValue(i, "salt"),
-                    d = o.encodePwd(password, {
+                var s = Utils.nodeValue(i, "sessionID"),
+                    a = Utils.nodeValue(i, "challenge"),
+                    r = Utils.nodeValue(i, "iterations", "i"),
+                    c = Utils.nodeValue(i, "isIrreversible", "b"),
+                    m = Utils.nodeValue(i, "salt"),
+                    d = Utils.encodePwd(password, {
                         challenge: a,
                         userName: username,
                         salt: m,
                         iIterate: r
                     }, c);
-                l = "<SessionLogin>", l += "<userName>" + o.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
+                l = "<SessionLogin>", l += "<userName>" + Utils.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
                 console.log("登陆阶段1 真的完成")
-
-                WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, m, {
+                return $.Deferred().resolve(l)
+            }, ()=>{
+                u.setAuthMode("digest")
+            })
+            .then((l)=>{
+                WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, curTime, {
                     session: u.m_bSession,
                     data: l,
                     success: function (a, l) {
                         var m = username + ":" + password;
-                        u.m_bSession && (u.m_szSessionId = o.nodeValue(l, "sessionID"), i.setItem("sessionId", u.m_szSessionId), m = o.encodeAES(t.encode(m), MD5(u.m_szSessionId)), u.sessionHeartbeat()), i.setItem("userInfo", t.encode(m)), "function" == typeof s && s.apply(r, [a, l].concat(c || []))
-                        console.log('登陆阶段2 真的完成')
+                        u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
+                        WebSession.setItem("sessionId", u.m_szSessionId), 
+                        m = Utils.encodeAES(t.encode(m), MD5(u.m_szSessionId)), 
+                        u.sessionHeartbeat()), 
+                        WebSession.setItem("userInfo", t.encode(m)), 
+                        "function" == typeof finishCB && finishCB.apply(r, [a, l].concat(c || []))
                     },
                     error: function (e, t) {
-                        "function" == typeof a && a.apply(r, [e, t].concat(c || []))
+                        "function" == typeof errorCB && errorCB.apply(r, [e, t].concat(c || []))
                     }
                 })
                 console.log('登陆阶段2 异步请求已发送')
-            }, ()=>{
-                u.setAuthMode("digest")
             })
-            // .then()
             console.log("登陆阶段1 through")
         },
         exportGuid: function (e, i, a) {
@@ -287,7 +292,7 @@ define(function (require, exports, module) {
                 c = r.m_szHttpProtocol + r.m_szHostName + ":" + r.m_iHttpPort + "/ISAPI/Security/GUIDFileData",
                 u = MD5("" + (new Date).getTime());
             c = WebSDK.getSecurityVersion(c, u);
-            var l = o.encodeAES(t.encode(o.encodeString(e)), WebSDK.szAESKey, u),
+            var l = Utils.encodeAES(t.encode(Utils.encodeString(e)), WebSDK.szAESKey, u),
                 m = "<?xml version='1.0' encoding='UTF-8'?><LoginPassword><password>" + l + "</password></LoginPassword>",
                 d = i.exportFile(c, r.getPluginAuth(), m, 2, 0);
             if (0 === d) s.alert(n.getValue("exportOK"));
@@ -296,7 +301,7 @@ define(function (require, exports, module) {
                 var p = n.getValue("exportFailed"),
                     m = i.getHttpErrorInfo();
                 if (m && -1 !== m.indexOf("<?xml")) {
-                    var g = o.parseXmlFromStr(m),
+                    var g = Utils.parseXmlFromStr(m),
                         f = r.getLockTips(g),
                         _ = Number(i.getLastError()),
                         h = {
@@ -312,9 +317,9 @@ define(function (require, exports, module) {
         setSecurityQA: function (e, t, i, a, r) {
             for (var c = this, u = [], l = !0, m = "<?xml version='1.0' encoding='UTF-8'?><SecurityQuestion><QuestionList>", d = 0, p = WebSDK.oSecurityCap.iMaxQANum; p > d; d++) {
                 if (d && $.inArray(e[d].szId, u) > -1) return s.alert(n.getValue("sameSQAnswerTips")), !1;
-                m += "<Question><id>" + e[d].szId + "</id><answer>" + o.encodeString(e[d].szAnswer) + "</answer></Question>", u.push(e[d].szId)
+                m += "<Question><id>" + e[d].szId + "</id><answer>" + Utils.encodeString(e[d].szAnswer) + "</answer></Question>", u.push(e[d].szId)
             }
-            return m += "</QuestionList>", m += "<password>" + o.encodeString(t) + "</password>", m += "</SecurityQuestion>", WebSDK.WSDK_SetDeviceConfig(c.m_szHostName, "questionInfoList", null, {
+            return m += "</QuestionList>", m += "<password>" + Utils.encodeString(t) + "</password>", m += "</SecurityQuestion>", WebSDK.WSDK_SetDeviceConfig(c.m_szHostName, "questionInfoList", null, {
                 data: m,
                 async: !1,
                 success: function () {
@@ -329,9 +334,9 @@ define(function (require, exports, module) {
         },
         getLockTips: function (e) {
             var t = "",
-                i = o.nodeValue(e, "lockStatus"),
-                s = o.nodeValue(e, "resLockTime", "i"),
-                a = o.nodeValue(e, "retryTimes", "i"),
+                i = Utils.nodeValue(e, "lockStatus"),
+                s = Utils.nodeValue(e, "resLockTime", "i"),
+                a = Utils.nodeValue(e, "retryTimes", "i"),
                 r = "locked" === i;
             if (r) {
                 var c;
@@ -406,7 +411,7 @@ define(function (require, exports, module) {
         },
         getDispatchInfo: function (e) {
             var t, n = this,
-                o = i.getItem("deviceInfo");
+                o = WebSession.getItem("deviceInfo");
             o ? (t = JSON.parse(o), t.iConfigIp = t.DeviceInfo.ip.match(/^[^\[][a-z0-9]*:/i) ? "[" + t.DeviceInfo.ip + "]" : t.DeviceInfo.ip, t.iPreviewIp = t.DeviceInfo.ip.match(/^[^\[][a-z0-9]*:/i) ? "[" + t.DeviceInfo.ip + "]" : t.DeviceInfo.ip, t.iOriginalIp = t.DeviceInfo.ip.replace(/\[|\]/g, ""), t.iPort = t.DeviceInfo.httpPort) : t = {
                 iConfigIp: location.hostname.match(/^[^\[][a-z0-9]*:/i) ? "[" + location.hostname + "]" : location.hostname,
                 iPreviewIp: location.hostname.match(/^[^\[][a-z0-9]*:/i) ? "[" + location.hostname + "]" : location.hostname,
@@ -439,7 +444,7 @@ define(function (require, exports, module) {
         getIPStr: function (e) {
             var t = e,
                 i = e;
-            return e.indexOf("[") > -1 && (i = e.substring(1, e.length - 1)), o.isIPv6Address(i) && (t = "[" + i + "]"), t
+            return e.indexOf("[") > -1 && (i = e.substring(1, e.length - 1)), Utils.isIPv6Address(i) && (t = "[" + i + "]"), t
         }
     }, module.exports = new e
 });

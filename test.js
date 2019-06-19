@@ -31,4 +31,4 @@ global.MD5 = require('md5');
 
 
 const common = require('./common');
-common.doLogin('admin','a12345678', ()=>{console.log('登陆成功')}, (e)=>{console.log('failed',e)});
+common.doLogin('admin','a12345678', ()=>{console.log('登陆成功')}, (e)=>{console.log('登陆failed',e)});
