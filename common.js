@@ -227,26 +227,44 @@ define(function (require, exports, module) {
                 },
                 queryObject: !0,
                 processData: !0,
-                success: function (t, i) {
-                    u.setAuthMode("session");
-                    var s = o.nodeValue(i, "sessionID"),
-                        a = o.nodeValue(i, "challenge"),
-                        r = o.nodeValue(i, "iterations", "i"),
-                        c = o.nodeValue(i, "isIrreversible", "b"),
-                        m = o.nodeValue(i, "salt"),
-                        d = o.encodePwd(password, {
-                            challenge: a,
-                            userName: username,
-                            salt: m,
-                            iIterate: r
-                        }, c);
-                    l = "<SessionLogin>", l += "<userName>" + o.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
-                    console.log("登陆阶段1 真的完成")
-                },
-                error: function () {
-                    u.setAuthMode("digest")
-                }
-            }),
+                // success: function (t, i) {
+                //     u.setAuthMode("session");
+                //     var s = o.nodeValue(i, "sessionID"),
+                //         a = o.nodeValue(i, "challenge"),
+                //         r = o.nodeValue(i, "iterations", "i"),
+                //         c = o.nodeValue(i, "isIrreversible", "b"),
+                //         m = o.nodeValue(i, "salt"),
+                //         d = o.encodePwd(password, {
+                //             challenge: a,
+                //             userName: username,
+                //             salt: m,
+                //             iIterate: r
+                //         }, c);
+                //     l = "<SessionLogin>", l += "<userName>" + o.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
+                //     console.log("登陆阶段1 真的完成")
+                // },
+                // error: function () {
+                //     u.setAuthMode("digest")
+                // }
+            })
+            .then((t,i)=>{
+                u.setAuthMode("session");
+                var s = o.nodeValue(i, "sessionID"),
+                    a = o.nodeValue(i, "challenge"),
+                    r = o.nodeValue(i, "iterations", "i"),
+                    c = o.nodeValue(i, "isIrreversible", "b"),
+                    m = o.nodeValue(i, "salt"),
+                    d = o.encodePwd(password, {
+                        challenge: a,
+                        userName: username,
+                        salt: m,
+                        iIterate: r
+                    }, c);
+                l = "<SessionLogin>", l += "<userName>" + o.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
+                console.log("登陆阶段1 真的完成")
+            }, ()=>{
+                u.setAuthMode("digest")
+            })
             console.log("登陆阶段1 through")
             , WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, m, {
                 session: u.m_bSession,
