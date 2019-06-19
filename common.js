@@ -219,7 +219,7 @@ define(function (require, exports, module) {
                 curTime = (new Date).getTime();
             WebSDK.WSDK_Request(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, {
                 cmd: "sessionCap",
-                async: !1,
+                async: !1, // 已实现
                 name: username,
                 password: password,
                 data: {
@@ -255,12 +255,12 @@ define(function (require, exports, module) {
                     session: u.m_bSession,
                     data: l,
                     success: function (a, l) {
-                        // var m = username + ":" + password;
-                        // u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
-                        // WebSession.setItem("sessionId", u.m_szSessionId), 
-                        // m = Utils.encodeAES(t.encode(m), MD5(u.m_szSessionId)), 
+                        var m = username + ":" + password;
+                        u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
+                        WebSession.setItem("sessionId", u.m_szSessionId), 
+                        m = Utils.encodeAES(t.encode(m), MD5(u.m_szSessionId)), 
                         // u.sessionHeartbeat()), 
-                        // WebSession.setItem("userInfo", t.encode(m)), 
+                        WebSession.setItem("userInfo", t.encode(m)), 
                         "function" == typeof finishCB && finishCB.apply(r, [a, l].concat(c || []))
                     },
                     error: function (e, t) {

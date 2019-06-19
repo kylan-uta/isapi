@@ -2395,11 +2395,12 @@ define(function (require, exports, module) {
             },
             _submitRequest = function (e, t) {
                 var n = new m_oTransMethord;
+                console.log("URI: ",e, 'OPTIONS',JSON.stringify(t))
                 return n.submitRequest(e, t)
             },
             _getSecurityVersion = function (e, t) {
                 return _submit(e, "GET", self.CGI.securityCap, null, {
-                    async: !1,
+                    async: !1, // 已实现
                     data: {
                         username: t
                     },

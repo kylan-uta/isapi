@@ -23,8 +23,8 @@ common.doLogin('admin','a12345678',
             channel: 1
         }, {
             data: "<?xml version='1.0' encoding='utf-8'?><FDSearchDescription><FDID>C44E807B5725474EB21948D3D4F69E5A</FDID><searchID>C87D6FEF-7600-0001-2FAA-F800514C1424</searchID><maxResults>50</maxResults><searchResultPosition>0</searchResultPosition></FDSearchDescription>",
-            success: console.log,
-            error:console.log
+            success: (a,b)=>console.log(b.responseText),
+            error: console.log
         });
     }, 
 (e)=>{console.log('登陆failed',e)});
