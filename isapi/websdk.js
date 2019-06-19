@@ -2067,7 +2067,8 @@ define(function (require, exports, module) {
                 error: function (e, t, n) {
                     "function" == typeof a.error && a.error(e, t, n)
                 }
-            }), _submitRequest(i, o)
+            });
+            return _submitRequest(i, o);
         }, this.WSDK_Login = function (e, t, n, a, i, o, r) {
             var s = this.findDeviceIndexByIP(e);
             if (-1 != s) return _PrintString("设备已经登录过"), void 0;
