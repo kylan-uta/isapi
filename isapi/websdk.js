@@ -2094,9 +2094,9 @@ define(function (require, exports, module) {
                         l.szUserName = a, 
                         l.szPassword = i, 
                         l.szSessionId = _oUtils.nodeValue(s, "sessionID"), 
+                        l.szAESKey = _strToAESKey(l.szPassword, l.szUserName), 
                         m_deviceSet.push(l), 
                         _getSecurityVersion(e, l.szUserName), 
-                        l.szAESKey = _strToAESKey(l.szPassword, l.szUserName), 
                         console.log(m_deviceSet)
                         // _getChannelInfo(e), 
                         // _getAlarmInputInfo(e), 
