@@ -2595,12 +2595,25 @@ define(function (require, exports, module) {
             var m = "", 
             p = "";
             console.log("sessionId: "+this.options.sessionId)
-            this.options.sessionId ? $.cookie("WebSession", this.options.sessionId) : ($.cookie("WebSession", null), m = this.options.username, p = this.options.password);
+            // this.options.sessionId ? $.cookie("WebSession", this.options.sessionId) : ($.cookie("WebSession", null), m = this.options.username, p = this.options.password);
+            var cookie = '';
+            if(this.options.sessionId) {
+                const cookieKey = "WebSession";
+                const cookieValue = this.options.sessionId;
+                cookie = encodeURIComponent(cookieKey)+"="+cookieValue;
+            } else {
+                cookie = '';
+                m = this.options.username;
+                p = this.options.password;
+            }
             return $.ajax({
                 type: this.options.type,
                 beforeSend: function (e) {
                     e.setRequestHeader("If-Modified-Since", "0")
                 },
+                headers: {
+                    Cookie: cookie
+                },            
                 username: m,
                 password: p,
                 async: this.options.async,

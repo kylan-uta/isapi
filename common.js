@@ -99,19 +99,19 @@ define(function (require, exports, module) {
             })
         },
         resize: function () {},
-        initLan: function () {
-            var e = this,
-                t = $.cookie("language");
-            if (null === t) {
-                var i = (navigator.language || navigator.browserLanguage).toLowerCase();
-                if (t = i.substring(0, 2), "zh" == t) {
-                    var o = i.split("-");
-                    2 == o.length && (t = o[0] + "_" + o[1].toUpperCase(), "cn" == o[1] && (t = "zh"))
-                }
-            }
-            var s = null !== $.cookie("dispatch");
-            s && $.cookie("dispatch", null), $("#language_list").length > 0 || s ? n.initLanguageSelect(t, e) : n.szCurLanguage = t, e.m_oLanCommon = n.getLanguage("Common"), $("#footer").text("©20" + seajs.web_version.substr(seajs.web_version.indexOf("build") + 5, 2) + " Hikvision Digital Technology Co., Ltd. All Rights Reserved.")
-        },
+        // initLan: function () {
+        //     var e = this,
+        //         t = $.cookie("language");
+        //     if (null === t) {
+        //         var i = (navigator.language || navigator.browserLanguage).toLowerCase();
+        //         if (t = i.substring(0, 2), "zh" == t) {
+        //             var o = i.split("-");
+        //             2 == o.length && (t = o[0] + "_" + o[1].toUpperCase(), "cn" == o[1] && (t = "zh"))
+        //         }
+        //     }
+        //     var s = null !== $.cookie("dispatch");
+        //     s && $.cookie("dispatch", null), $("#language_list").length > 0 || s ? n.initLanguageSelect(t, e) : n.szCurLanguage = t, e.m_oLanCommon = n.getLanguage("Common"), $("#footer").text("©20" + seajs.web_version.substr(seajs.web_version.indexOf("build") + 5, 2) + " Hikvision Digital Technology Co., Ltd. All Rights Reserved.")
+        // },
         initCSS: function () {},
         initModule: function () {
             var e = this;
