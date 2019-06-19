@@ -23,7 +23,7 @@ define(function (require, exports, module) {
             szType: ""
         }, this.m_bWizard = !1, this.m_bSession = !1, this.m_iSessionFailed = 0, this.m_iSessionInterval = 0, this.m_iReconnectFailed = 0, this.m_szDefaultPwd = ""
     }
-    /*require("layout"), require("cookie"),*/ require("./lib/json2"), /*require("angular"),*/ require("./isapi/websdk"), require("cryptico");
+    /*require("layout"), require("cookie"),*/ require("./lib/json2"), /*require("angular"), require("./isapi/websdk"),*/ require("cryptico");
     var t = require("./lib/base64"),
         WebSession = require("./lib/webSession"),
         // n = require("translator"),
@@ -255,7 +255,6 @@ define(function (require, exports, module) {
                     session: u.m_bSession,
                     data: l,
                     success: function (a, l) {
-                        console.log(a,l)
                         // var m = username + ":" + password;
                         // u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
                         // WebSession.setItem("sessionId", u.m_szSessionId), 
@@ -265,7 +264,6 @@ define(function (require, exports, module) {
                         "function" == typeof finishCB && finishCB.apply(r, [a, l].concat(c || []))
                     },
                     error: function (e, t) {
-                        console.log(e,t)
                         "function" == typeof errorCB && errorCB.apply(r, [e, t].concat(c || []))
                     }
                 })

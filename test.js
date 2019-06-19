@@ -1,4 +1,5 @@
 require('amd-loader');
+require('./isapi/websdk');
 const { JSDOM } = require('jsdom');
 const { document, window } = new JSDOM('<!doctype html><html><body></body></html>');
 global.document = document;
@@ -32,3 +33,4 @@ global.MD5 = require('md5');
 
 const common = require('./common');
 common.doLogin('admin','a12345678', ()=>{console.log('登陆成功')}, (e)=>{console.log('登陆failed',e)});
+WebSDK.WSDK_GetDeviceConfig('192.168.1.4','faceDataLibraryCfgCap',null,{success:console.log,error:console.log})
