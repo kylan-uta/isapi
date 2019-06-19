@@ -2390,7 +2390,7 @@ define(function (require, exports, module) {
             },
             _submitRequest = function (e, t) {
                 var n = new m_oTransMethord;
-                n.submitRequest(e, t)
+                return n.submitRequest(e, t)
             },
             _getSecurityVersion = function (e, t) {
                 _submit(e, "GET", self.CGI.securityCap, null, {
