@@ -49,6 +49,7 @@ const common = require('./common');
 const FaceSnapLib = require('./config/faceSnapLib/faceSnapLib')
 common.doLogin('admin','a12345678', ()=>{
     console.log('登陆成功');
-    FaceSnapLib.getInfo()
+    const face = new FaceSnapLib()
+    face.getInfo()
     // WebSDK.WSDK_GetDeviceConfig('192.168.1.4','faceDataLibraryCfg',null,{success:console.log,error:console.log});
 }, (e)=>{console.log('登陆failed',e)});
