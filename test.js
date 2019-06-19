@@ -46,10 +46,15 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 global.CryptoJS = CryptoJS;
 
 const common = require('./common');
-const FaceSnapLib = require('./config/faceSnapLib/faceSnapLib')
+//const FaceSnapLib = require('./config/faceSnapLib/faceSnapLib')
 common.doLogin('admin','a12345678', ()=>{
     console.log('登陆成功');
-    const face = new FaceSnapLib()
-    face.getInfo()
-    // WebSDK.WSDK_GetDeviceConfig('192.168.1.4','faceDataLibraryCfg',null,{success:console.log,error:console.log});
+    //const face = FaceSnapLib
+    //console.log(face)
+    //face.getInfo()
+    const Utils = require('./lib/utils')
+    var l = ["FDID", "name", "thresholdValue", "customInfo", "faceLibType"];
+    WebSDK.WSDK_GetDeviceConfig('192.168.1.4','faceDataLibraryCfg',null,{success:(e,o)=>{
+	$(o).find("name").each((a,b)=>{console.log($(b).text())})
+    },error:console.log});
 }, (e)=>{console.log('登陆failed',e)});
