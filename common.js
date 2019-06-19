@@ -260,13 +260,18 @@ define(function (require, exports, module) {
                         salt: m,
                         iIterate: r
                     }, c);
-                l = "<SessionLogin>", l += "<userName>" + Utils.encodeString(username) + "</userName>", l += "<password>" + d + "</password>", l += "<sessionID>" + s + "</sessionID>", l += "</SessionLogin>"
+                l = "<SessionLogin>", 
+                l += "<userName>" + Utils.encodeString(username) + "</userName>", 
+                l += "<password>" + d + "</password>", 
+                l += "<sessionID>" + s + "</sessionID>", 
+                l += "</SessionLogin>"
                 console.log("登陆阶段1 真的完成")
                 return $.Deferred().resolve(l)
             }, ()=>{
                 u.setAuthMode("digest")
             })
             .then((l)=>{
+                console.log(l)
                 WebSDK.WSDK_Login(u.m_szHostName, u.m_iHttpProtocal, u.m_iHttpPort, username, password, curTime, {
                     session: u.m_bSession,
                     data: l,
@@ -280,6 +285,7 @@ define(function (require, exports, module) {
                         "function" == typeof finishCB && finishCB.apply(r, [a, l].concat(c || []))
                     },
                     error: function (e, t) {
+                        console.log(e,t)
                         "function" == typeof errorCB && errorCB.apply(r, [e, t].concat(c || []))
                     }
                 })
