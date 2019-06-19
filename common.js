@@ -259,7 +259,7 @@ define(function (require, exports, module) {
                         u.m_bSession && (u.m_szSessionId = Utils.nodeValue(l, "sessionID"), 
                         WebSession.setItem("sessionId", u.m_szSessionId), 
                         m = Utils.encodeAES(t.encode(m), MD5(u.m_szSessionId)), 
-                        // u.sessionHeartbeat()), 
+                        u.sessionHeartbeat()), 
                         WebSession.setItem("userInfo", t.encode(m)), 
                         "function" == typeof finishCB && finishCB.apply(r, [a, l].concat(c || []))
                     },
