@@ -2528,6 +2528,40 @@ define(function (require, exports, module) {
         }, transClient.prototype.processCompleteCB = function (e) {
             "function" == typeof this.options.complete && this.options.complete(e.status, _oUtils.getResponseData(e), e)
         };
+        transClient.prototype.processSuccessCBDfd = function (e, t) {
+            const dfd = new $.Deferred();
+            if (e && 4 == e.readyState) {
+                var n = _oUtils.getResponseData(e);
+                if (HTTP_STATUS_200 == e.status) {
+                    var a = self.iSecurityVersion,
+                        i = this.options.cgi;
+                    if (a > 0 && i) {
+                        var o = n,
+                            r = this.options.type,
+                            s = this.options.aesKey,
+                            l = i["security" + a];
+                        if (l && ("GET" === r || "POST" === r))
+                            for (var c, u, d = 0, m = l.length; m > d; d++) {
+                                c = $(o).find("" + l[d]);
+                                for (var p = 0, g = c.length; g > p; p++)
+                                    if (u = $(c[p]).text(), u.length) {
+                                        var h = t.substr(4 + t.indexOf("&iv="), 32),
+                                            f = _oBase64.decode(_oUtils.decodeAES(u, s, h));
+                                        $(c[p]).text(_oUtils.decodeString(f))
+                                    }
+                            }
+                    }
+                    return dfd.resolve(HTTP_STATUS_200, n, e);
+                } else {
+                    return dfd.reject(e.status, n, e);
+                }
+            }
+        }, transClient.prototype.processErrorCBDfd = function (e, t) {
+            const dfd = new $.Deferred();
+            if (4 == e.readyState || "timeout" == t || "error" == t) {
+                return dfd.reject(e.status, _oUtils.getResponseData(e), e)
+            }
+        };
         var jqueryAjaxClient = function () {
             transClient.call(this)
         };
@@ -2557,9 +2591,10 @@ define(function (require, exports, module) {
                     })
                 }
             }
-            var m = "",
-                p = "";
-            this.options.sessionId ? $.cookie("WebSession", this.options.sessionId) : ($.cookie("WebSession", null), m = this.options.username, p = this.options.password), $.ajax({
+            var m = "", 
+            p = "";
+            this.options.sessionId ? $.cookie("WebSession", this.options.sessionId) : ($.cookie("WebSession", null), m = this.options.username, p = this.options.password);
+            return $.ajax({
                 type: this.options.type,
                 beforeSend: function (e) {
                     e.setRequestHeader("If-Modified-Since", "0")
@@ -2581,6 +2616,15 @@ define(function (require, exports, module) {
                     n.processCompleteCB(e)
                 }
             })
+            .then((t, a, i)=>{n.processSuccessCBDfd(i, e)}, (e, t)=>{n.processErrorCBDfd(e, t)})
+            // .done("function" == typeof this.options.success ? this.options.success : null)
+            // .fail("function" == typeof this.options.error ? this.options.error : null)
+            // .always(e=>{n.processCompleteCB(e)})
+
+//             $.ajax({url:'http://192.168.1.4/doc/page/login.aspx'})
+// .then((a)=>{const kk=a.split('\n')[0];console.log(kk);return $.Deferred().resolve(kk)}, (b)=>{return $.Deferred().reject(b.status)})
+// .done((a)=>{dfd = new $.Deferred();dfd.done(()=>{console.log(a)});setTimeout(()=>{dfd.resolve()},3000)})
+// .fail((a)=>{console.log(456+" "+a)})
         }, m_oTransMethord = jqueryAjaxClient
     }
     var _oBase64 = require("../lib/base64"),
