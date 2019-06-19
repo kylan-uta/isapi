@@ -5,7 +5,14 @@ define(function (require, exports, module) {
         }, this.m_iChannelId = 0, this.m_szModule = "", this.m_bEnableLocalDetection = !1
     }
     var t, n, a, i, o, r, s;
-    t = require("common"), n = require("translator"), a = require("utils"), i = require("dialog"), o = require("isapi/device"), r = require("common/plugin"), s = require("service"), e.prototype = {
+    t = require("../common"), 
+    // n = require("translator"), 
+    a = require("../lib/utils"), 
+    // i = require("dialog"), 
+    o = require("../isapi/device"), 
+    // r = require("common/plugin"), 
+    // s = require("service"), 
+    e.prototype = {
         init: function () {
             var e = this;
             e.m_iChannelId = 0, e.getChannel()
